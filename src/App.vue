@@ -1,32 +1,69 @@
 <template>
   <div id="app">
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
-    </div>
-    <router-view/>
+    <router-view />
   </div>
 </template>
 
+<script>
+import axios from "axios";
+import db from "./firebase/firebaseinit";
+import {
+  collection,
+  query,
+  onSnapshot,
+  updateDoc,
+  doc,
+} from "firebase/firestore";
+
+export default {
+  name: "App",
+  data() {
+    return {
+      APIkey: "11766e3f9d10d8c040c5a5aca995163f",
+      city: "Detroit",
+      cities: [],
+    };
+  },
+  created() {
+    this.getCityWether();
+  },
+  methods: {
+    getCityWether() {
+      const q = query(collection(db, "cities"));
+      onSnapshot(q, (snapshot) => {
+        snapshot.docChanges().forEach(async (change) => {
+          if (change.type === "added") {
+            try {
+              const response = await axios.get(
+                `https://api.openweathermap.org/data/2.5/weather?q=${
+                  change.doc.data().city
+                }&units=imperial&appid=${this.APIkey}`
+              );
+              const data = response.data;
+
+              const cityRef = doc(db, "cities", change.doc.id);
+              updateDoc(cityRef, {
+                currentWether: data,
+              }).then(() => {
+                this.cities.push(change.doc.data());
+              });
+            } catch (error) {
+              console.log(error);
+            }
+          }
+        });
+      });
+      // console.log(unsubscribe);
+    },
+  },
+};
+</script>
+
 <style lang="scss">
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-}
-
-#nav {
-  padding: 30px;
-
-  a {
-    font-weight: bold;
-    color: #2c3e50;
-
-    &.router-link-exact-active {
-      color: #42b983;
-    }
-  }
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Quicksand", sans-serif;
 }
 </style>
