@@ -1,7 +1,7 @@
 <template>
   <div class="grid">
     <div class="city-link" v-for="(city, index) in cities" :key="index">
-      <City />
+      <City :city="city"/>
     </div>
   </div>
 </template>
