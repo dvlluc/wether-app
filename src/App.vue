@@ -1,10 +1,12 @@
 <template>
-  <div id="app">
-    <router-view />
+  <div class="main">
+    <Navigation />
+    <router-view :cities="cities"/>
   </div>
 </template>
 
 <script>
+// plugin
 import axios from "axios";
 import db from "./firebase/firebaseinit";
 import {
@@ -14,9 +16,13 @@ import {
   updateDoc,
   doc,
 } from "firebase/firestore";
+import Navigation from "./components/Navigation.vue";
 
 export default {
   name: "App",
+  components: {
+    Navigation,
+  },
   data() {
     return {
       APIkey: "11766e3f9d10d8c040c5a5aca995163f",
@@ -65,5 +71,15 @@ export default {
   padding: 0;
   box-sizing: border-box;
   font-family: "Quicksand", sans-serif;
+}
+
+.main {
+  // max-width: 1024px;
+  // margin: 0 auto;
+  height: 100vh;
+}
+
+.container {
+  padding: 0 20px;
 }
 </style>
