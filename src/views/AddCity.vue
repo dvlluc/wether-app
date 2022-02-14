@@ -1,7 +1,7 @@
 <template>
   <div class="grid">
     <div class="city-link" v-for="(city, index) in cities" :key="index">
-      <City :city="city"/>
+      <City :city="city" :edit="edit"/>
     </div>
   </div>
 </template>
@@ -11,7 +11,7 @@ import City from "../components/City.vue";
 
 export default {
   name: "AddCity",
-  props: ["cities"],
+  props: ["cities", "edit"],
   components: { City },
   created() {
     console.log(this.cities);

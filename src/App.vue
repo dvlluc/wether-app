@@ -1,8 +1,8 @@
 <template>
   <div class="main">
     <Modal v-show="modalOpen" @closeModal="toggleModal" :APIkey="APIkey" />
-    <Navigation @addCity="toggleModal" />
-    <router-view :cities="cities" />
+    <Navigation @addCity="toggleModal" @editCity="toggleEdit" />
+    <router-view :cities="cities" :edit="edit" />
   </div>
 </template>
 
@@ -32,6 +32,7 @@ export default {
       city: "Detroit",
       cities: [],
       modalOpen: false,
+      edit: false,
     };
   },
   created() {
@@ -41,12 +42,14 @@ export default {
     toggleModal() {
       this.modalOpen = !this.modalOpen;
     },
+    toggleEdit() {
+      this.edit = !this.edit;
+    },
     getCityWether() {
       const q = query(collection(db, "cities"));
       onSnapshot(q, (snapshot) => {
         snapshot.docChanges().forEach(async (change) => {
-          // console.log(change.type);
-          // console.log(change);
+          console.log(change.type);
           if (change.type === "added") {
             try {
               const response = await axios.get(
@@ -60,15 +63,23 @@ export default {
               updateDoc(cityRef, {
                 currentWether: data,
               }).then(() => {
-                this.cities.push(change.doc.data());
+                const res = change.doc.data();
+                res.id = change.doc.id;
+                this.cities.push(res);
               });
             } catch (error) {
               console.log(error);
             }
+          } else if (change.type === "removed") {
+            console.log(this.cities);
+            this.cities = this.cities.filter((city) => {
+              console.log(city.id+" - "+change.doc.id);
+              return city.id !== change.doc.id;
+              
+            });
           }
         });
       });
-      // console.log(unsubscribe);
     },
   },
 };

@@ -3,8 +3,8 @@
     <nav>
       <span>Add city</span>
       <div class="rigth">
-        <i class="far fa-edit"></i>
-        <i class="fas fa-sync"></i>
+        <i class="far fa-edit" ref="editCities" @click="editCities"></i>
+        <i class="fas fa-sync" @click="reloadApp"></i>
         <i class="fas fa-plus" @click="addCity"></i>
       </div>
     </nav>
@@ -14,11 +14,18 @@
 <script>
 export default {
   name: "Navigation",
-  methods:{
-    addCity(){
-      this.$emit('addCity');
+  methods: {
+    addCity() {
+      this.$emit("addCity");
+    },
+    editCities() {
+      this.$refs.editCities.classList.toggle("edit-active")
+      this.$emit("editCity");
+    },
+    reloadApp(){
+      location.reload();
     }
-  }
+  },
 };
 </script>
 
@@ -38,10 +45,15 @@ header {
     color: #fff;
     padding: 30px 0;
     justify-content: space-between;
-    i{
+    i {
       cursor: pointer;
     }
   }
+
+.edit-active{
+  color:rgba(210, 75, 75 , 1)
+}
+
   .fas {
     margin-left: 16px;
   }
