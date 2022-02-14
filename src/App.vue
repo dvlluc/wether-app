@@ -1,7 +1,8 @@
 <template>
   <div class="main">
-    <Navigation />
-    <router-view :cities="cities"/>
+    <Modal v-show="modalOpen" @closeModal="toggleModal" :APIkey="APIkey" />
+    <Navigation @addCity="toggleModal" />
+    <router-view :cities="cities" />
   </div>
 </template>
 
@@ -17,27 +18,35 @@ import {
   doc,
 } from "firebase/firestore";
 import Navigation from "./components/Navigation.vue";
+import Modal from "./components/Modal.vue";
 
 export default {
   name: "App",
   components: {
     Navigation,
+    Modal,
   },
   data() {
     return {
       APIkey: "11766e3f9d10d8c040c5a5aca995163f",
       city: "Detroit",
       cities: [],
+      modalOpen: false,
     };
   },
   created() {
     this.getCityWether();
   },
   methods: {
+    toggleModal() {
+      this.modalOpen = !this.modalOpen;
+    },
     getCityWether() {
       const q = query(collection(db, "cities"));
       onSnapshot(q, (snapshot) => {
         snapshot.docChanges().forEach(async (change) => {
+          // console.log(change.type);
+          // console.log(change);
           if (change.type === "added") {
             try {
               const response = await axios.get(

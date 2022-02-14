@@ -5,7 +5,7 @@
       <div class="rigth">
         <i class="far fa-edit"></i>
         <i class="fas fa-sync"></i>
-        <i class="fas fa-plus"></i>
+        <i class="fas fa-plus" @click="addCity"></i>
       </div>
     </nav>
   </header>
@@ -14,6 +14,11 @@
 <script>
 export default {
   name: "Navigation",
+  methods:{
+    addCity(){
+      this.$emit('addCity');
+    }
+  }
 };
 </script>
 
@@ -33,6 +38,9 @@ header {
     color: #fff;
     padding: 30px 0;
     justify-content: space-between;
+    i{
+      cursor: pointer;
+    }
   }
   .fas {
     margin-left: 16px;
