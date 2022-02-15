@@ -17,7 +17,7 @@
 <script>
 import axios from "axios";
 import db from "../firebase/firebaseinit";
-import { collection, addDoc } from "firebase/firestore";
+import { collection, query, where, getDocs, addDoc } from "firebase/firestore";
 export default {
   name: "modal",
   props: ["APIkey"],
@@ -40,13 +40,17 @@ export default {
           `https://api.openweathermap.org/data/2.5/weather?q=${this.city}&units=metric&appid=${this.APIkey}`
         );
         const data = await res.data;
-
-        addDoc(collection(db, "cities"), {
-          city: this.city,
-          currentWether: data,
-        }).then(() => {
-          this.$emit("closeModal");
-        });
+        const citiesRef = collection(db, "cities");
+        const q = query(citiesRef, where("city", "==", this.city));
+        const querySnapshot = await getDocs(q);
+        if (querySnapshot.docs.length === 0) {
+          addDoc(citiesRef, {
+            city: this.city,
+            currentWeather: data,
+          }).then(() => {
+            this.$emit("closeModal");
+          });
+        }
       }
     },
   },

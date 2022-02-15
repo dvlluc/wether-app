@@ -2,7 +2,7 @@
   <div class="main">
     <Modal v-show="modalOpen" @closeModal="toggleModal" :APIkey="APIkey" />
     <Navigation @addCity="toggleModal" @editCity="toggleEdit" />
-    <router-view :cities="cities" :edit="edit" />
+    <router-view :cities="cities" :edit="edit" :APIkey="APIkey"/>
   </div>
 </template>
 
@@ -36,7 +36,7 @@ export default {
     };
   },
   created() {
-    this.getCityWether();
+    this.getCityWeather();
   },
   methods: {
     toggleModal() {
@@ -45,7 +45,7 @@ export default {
     toggleEdit() {
       this.edit = !this.edit;
     },
-    getCityWether() {
+    getCityWeather() {
       const q = query(collection(db, "cities"));
       onSnapshot(q, (snapshot) => {
         snapshot.docChanges().forEach(async (change) => {
@@ -61,7 +61,7 @@ export default {
 
               const cityRef = doc(db, "cities", change.doc.id);
               updateDoc(cityRef, {
-                currentWether: data,
+                currentWeather: data,
               }).then(() => {
                 const res = change.doc.data();
                 res.id = change.doc.id;
@@ -73,9 +73,7 @@ export default {
           } else if (change.type === "removed") {
             console.log(this.cities);
             this.cities = this.cities.filter((city) => {
-              console.log(city.id+" - "+change.doc.id);
               return city.id !== change.doc.id;
-              
             });
           }
         });

@@ -1,5 +1,5 @@
 <template>
-  <div class="city">
+  <div class="city" @click="goToWeather">
     <i
       v-if="edit"
       @click="removeCity"
@@ -10,10 +10,10 @@
       {{ this.city.city }}
     </span>
     <div class="weather">
-      <span> {{ Math.round(this.city.currentWether.main.temp) }}&deg; </span>
+      <span> {{ Math.round(this.city.currentWeather.main.temp) }}&deg; </span>
       <img
         :src="
-          require(`../../public/conditions/${this.city.currentWether.weather[0].icon}.svg`)
+          require(`../../public/conditions/${this.city.currentWeather.weather[0].icon}.svg`)
         "
         alt=".img"
       />
@@ -21,7 +21,7 @@
     <div class="video">
       <video
         :src="
-          require(`../../public/videos/${this.city.currentWether.weather[0].icon}.mp4`)
+          require(`../../public/videos/${this.city.currentWeather.weather[0].icon}.mp4`)
         "
         autoplay
         loop
@@ -37,7 +37,7 @@ import db from "../firebase/firebaseinit";
 import { doc, deleteDoc } from "firebase/firestore";
 
 export default {
-  name: "city",
+  name: "City",
   props: ["city", "edit"],
   data() {
     return {
@@ -48,6 +48,14 @@ export default {
   methods: {
     async removeCity() {
       await deleteDoc(doc(db, "cities", `${this.city.id}`));
+    },
+    goToWeather(e) {
+      // console.log(e.target);
+      if (e.target === this.$refs.edit) {
+        //
+      }else{
+        this.$router.push({name:"Weather", params:{city:this.city.city}})
+      }
     },
   },
 };
