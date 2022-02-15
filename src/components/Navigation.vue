@@ -1,30 +1,50 @@
 <template>
-  <header class="container add-city">
-    <nav>
-      <span>Add city</span>
-      <div class="rigth">
-        <i class="far fa-edit" ref="editCities" @click="editCities"></i>
-        <i class="fas fa-sync" @click="reloadApp"></i>
-        <i class="fas fa-plus" @click="addCity"></i>
-      </div>
-    </nav>
-  </header>
+  <div>
+    <header v-if="addCityActive" class="container add-city">
+      <nav>
+        <span>Add city</span>
+        <div class="rigth">
+          <i class="far fa-edit" ref="editCities" @click="editCities"></i>
+          <i class="fas fa-sync" @click="reloadApp"></i>
+          <i class="fas fa-plus" @click="addCity"></i>
+        </div>
+      </nav>
+    </header>
+    <header v-else class="container" :class="{day:isDay, night:isNight}">
+      <nav>
+        <router-link class="router-link" :to="{name:'AddCity'},">
+          <i class="fas fa-plus"></i>
+        </router-link>
+        <span>
+          <!-- {{
+            new Date().toLocaleString("en-GB", { timeZone: "America/New_York" })
+            new Date().toLocaleString("en-GB")
+          }} -->
+          {{
+            new Date().toLocaleString("en-GB")
+          }}
+        </span>
+        <span>&deg; C</span>
+      </nav>
+    </header>
+  </div>
 </template>
 
 <script>
 export default {
   name: "Navigation",
+  props: ["addCityActive", "isDay", "isNight"],
   methods: {
     addCity() {
       this.$emit("addCity");
     },
     editCities() {
-      this.$refs.editCities.classList.toggle("edit-active")
+      this.$refs.editCities.classList.toggle("edit-active");
       this.$emit("editCity");
     },
-    reloadApp(){
+    reloadApp() {
       location.reload();
-    }
+    },
   },
 };
 </script>
@@ -33,6 +53,16 @@ export default {
 .add-city {
   background-color: #313640;
 }
+
+.day {
+  transition: 500ms ease all;
+  background-color: rgb(59, 150, 249);
+}
+.night {
+  transition: 500ms ease all;
+  background-color: rgb(20, 42, 95);
+}
+
 header {
   z-index: 99;
   position: fixed;
@@ -50,9 +80,13 @@ header {
     }
   }
 
-.edit-active{
-  color:rgba(210, 75, 75 , 1)
-}
+  .edit-active {
+    color: rgba(210, 75, 75, 1);
+  }
+
+  .router-link {
+    color: #fff;
+  }
 
   .fas {
     margin-left: 16px;

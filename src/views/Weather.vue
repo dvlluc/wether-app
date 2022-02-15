@@ -21,6 +21,10 @@ export default {
   created() {
     this.getWeather();
   },
+  beforeDestroy() {
+    this.$emit("resetDays");
+  },
+
   methods: {
     async getWeather() {
       const citiesRef = collection(db, "cities");
@@ -33,17 +37,28 @@ export default {
       console.log(this.currentWeather);
       axios
         .get(
-          `https://api.openweathermap.org/data/2.5/onecall?lat=${this.currentWeather.coord.lat}&lon=${this.currentWeather.coord.lon}&exclude=current,minutley,alerts&units=imperial&appid=${this.APIkey}`
+          `https://api.openweathermap.org/data/2.5/onecall?lat=${this.currentWeather.coord.lat}&lon=${this.currentWeather.coord.lon}&exclude=current,minutley,alerts&units=metric&appid=${this.APIkey}`
         )
         .then((res) => {
           this.forecast = res.data;
         })
         .then(() => {
           this.loading = false;
-          console.log(this.loading);
-          console.log(this.currentWeather);
-          console.log(this.forecast);
+          this.getCurrentTime();
         });
+    },
+    getCurrentTime() {
+      const dateObject = new Date();
+      this.currentTime = dateObject.getHours();
+      const sunrise = new Date(
+        this.currentWeather.sys.sunrise * 1000
+      ).getHours();
+      const sunset = new Date(this.currentWeather.sys.sunset * 1000).getHours();
+      if (this.currentTime > sunrise && this.currentTime < sunset) {
+        this.$emit("isDay");
+      } else {
+        this.$emit("isNight");
+      }
     },
   },
 };
