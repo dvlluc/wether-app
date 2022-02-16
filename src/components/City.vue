@@ -68,11 +68,13 @@ export default {
   position: relative;
   flex-direction: column;
   padding: 20px;
-  flex-basis: 50%;
+  flex-basis: 48%;
   min-height: 250px;
   color: #fff;
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
-  opacity: 0.4;
+  opacity: 0.6;
+  cursor: pointer;
+
 
   .edit {
     border-radius: 0px 15px 0 0;
@@ -108,7 +110,7 @@ export default {
       margin-right: 8px;
     }
     img {
-      height: 20px;
+      height: 100px;
       width: auto;
     }
   }
@@ -141,6 +143,5 @@ export default {
 .city:hover {
   opacity: 1;
   transition: 1s;
-  color: aqua;
 }
 </style>
