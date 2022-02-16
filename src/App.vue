@@ -15,6 +15,8 @@
       @isDay="dayTime"
       @isNight="nightTime"
       @resetDays="resetDays"
+      :isDay="isDay"
+      :isNight="isNight"
     />
   </div>
 </template>
@@ -123,6 +125,21 @@ export default {
   padding: 0;
   box-sizing: border-box;
   font-family: "Quicksand", sans-serif;
+}
+
+.day {
+  transition: 500ms ease all;
+  background-color: rgb(59, 150, 249);
+}
+.night {
+  transition: 500ms ease all;
+  background-color: rgb(20, 42, 95);
+}
+
+.day,
+.night {
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
+    0 2px 4px -1px rgba(0, 0, 0, 0.06);
 }
 
 .main {
