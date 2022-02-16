@@ -27,6 +27,7 @@
         loop
         muted
       ></video>
+      {{ this.city.currentWeather.weather[0].description }}
       <div class="bg-overlay"></div>
     </div>
   </div>
@@ -50,11 +51,11 @@ export default {
       await deleteDoc(doc(db, "cities", `${this.city.id}`));
     },
     goToWeather(e) {
-      // console.log(e.target);
-      if (e.target === this.$refs.edit) {
-        //
-      }else{
-        this.$router.push({name:"Weather", params:{city:this.city.city}})
+      if (e.target !== this.$refs.edit) {
+        this.$router.push({
+          name: "Weather",
+          params: { city: this.city.city },
+        });
       }
     },
   },
@@ -71,6 +72,7 @@ export default {
   min-height: 250px;
   color: #fff;
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  opacity: 0.4;
 
   .edit {
     border-radius: 0px 15px 0 0;
@@ -134,5 +136,11 @@ export default {
       background-color: rgba(0, 0, 0, 0.2);
     }
   }
+}
+
+.city:hover {
+  opacity: 1;
+  transition: 1s;
+  color: aqua;
 }
 </style>

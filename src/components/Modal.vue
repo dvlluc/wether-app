@@ -17,10 +17,10 @@
 <script>
 import axios from "axios";
 import db from "../firebase/firebaseinit";
-import { collection, query, where, getDocs, addDoc } from "firebase/firestore";
+import { collection, addDoc } from "firebase/firestore";
 export default {
   name: "modal",
-  props: ["APIkey"],
+  props: ["APIkey", "cities"],
   data() {
     return {
       city: "",
@@ -35,21 +35,28 @@ export default {
     async addCity() {
       if (this.city === "") {
         alert("field can't be empty");
+      } else if (
+        this.cities.some((res) => res.city === this.city.toLowerCase())
+      ) {
+        alert(`${this.city} already exists!`);
+        this.city = "";
       } else {
-        const res = await axios.get(
-          `https://api.openweathermap.org/data/2.5/weather?q=${this.city}&units=metric&appid=${this.APIkey}`
-        );
-        const data = await res.data;
-        const citiesRef = collection(db, "cities");
-        const q = query(citiesRef, where("city", "==", this.city));
-        const querySnapshot = await getDocs(q);
-        if (querySnapshot.docs.length === 0) {
+        try {
+          const res = await axios.get(
+            `https://api.openweathermap.org/data/2.5/weather?q=${this.city}&units=metric&appid=${this.APIkey}`
+          );
+          const data = await res.data;
+          const citiesRef = collection(db, "cities");
           addDoc(citiesRef, {
             city: this.city,
             currentWeather: data,
           }).then(() => {
             this.$emit("closeModal");
+            this.city="";
           });
+        } catch (error) {
+          alert(`${this.city} does not exist, please try again!`);
+          this.city = "";
         }
       }
     },

@@ -17,7 +17,6 @@ export default {
     DailyForecast,
   },
   created() {
-    console.log(this.forecast);
   },
   computed: {
     filteredList() {

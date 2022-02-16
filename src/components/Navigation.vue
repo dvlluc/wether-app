@@ -2,20 +2,21 @@
   <div>
     <header v-if="addCityActive" class="container add-city">
       <nav>
-        <span>Add city</span>
+        <span>Weather HERE</span>
         <div class="rigth">
           <i class="far fa-edit" ref="editCities" @click="editCities"></i>
           <i class="fas fa-sync" @click="reloadApp"></i>
           <i class="fas fa-plus" @click="addCity"></i>
+          <i class="fas fa-weather"></i>
         </div>
       </nav>
     </header>
     <header v-else class="container" :class="{day:isDay, night:isNight}">
       <nav>
         <router-link class="router-link" :to="{name:'AddCity'},">
-          <i class="fas fa-plus"></i>
+          <i class="fas fa-angle-left"></i>
         </router-link>
-        <span>more info</span>
+        <span>Weather HERE</span>
         <span>&deg; C</span>
       </nav>
     </header>
@@ -69,6 +70,7 @@ header {
 
   .router-link {
     color: #fff;
+    font-weight: 900;
   }
 
   .fas {

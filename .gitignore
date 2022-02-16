@@ -1,11 +1,7 @@
 .DS_Store
 node_modules
 /dist
-/public/conditions
 /public/videos
-/public/Icons
-/public/moon.png
-/public/sun.png
 
 
 # local env files

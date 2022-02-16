@@ -1,23 +1,34 @@
 <template>
   <div class="main">
-    <Modal v-show="modalOpen" @closeModal="toggleModal" :APIkey="APIkey" />
-    <Navigation
-      @addCity="toggleModal"
-      @editCity="toggleEdit"
-      :addCityActive="addCityActive"
-      :isDay="isDay"
-      :isNight="isNight"
-    />
-    <router-view
-      :cities="cities"
-      :edit="edit"
-      :APIkey="APIkey"
-      @isDay="dayTime"
-      @isNight="nightTime"
-      @resetDays="resetDays"
-      :isDay="isDay"
-      :isNight="isNight"
-    />
+    <div v-if="loading" class="loading">
+      <span> </span>
+    </div>
+    <div v-else class="app">
+      <Modal
+        v-show="modalOpen"
+        @closeModal="toggleModal"
+        :APIkey="APIkey"
+        :cities="cities"
+      />
+      <Navigation
+        @addCity="toggleModal"
+        @editCity="toggleEdit"
+        :addCityActive="addCityActive"
+        :isDay="isDay"
+        :isNight="isNight"
+      />
+      <router-view
+        :cities="cities"
+        :edit="edit"
+        :APIkey="APIkey"
+        @isDay="dayTime"
+        @isNight="nightTime"
+        @resetDays="resetDays"
+        :isDay="isDay"
+        :isNight="isNight"
+        @addCity="toggleModal"
+      />
+    </div>
   </div>
 </template>
 
@@ -50,6 +61,7 @@ export default {
       addCityActive: false,
       isDay: null,
       isNight: null,
+      loading: true,
     };
   },
   created() {
@@ -70,8 +82,10 @@ export default {
     getCityWeather() {
       const q = query(collection(db, "cities"));
       onSnapshot(q, (snapshot) => {
+        if (snapshot.docs.length === 0) {
+          this.loading = false;
+        }
         snapshot.docChanges().forEach(async (change) => {
-          console.log(change.type);
           if (change.type === "added") {
             try {
               const response = await axios.get(
@@ -88,12 +102,12 @@ export default {
                 const res = change.doc.data();
                 res.id = change.doc.id;
                 this.cities.push(res);
+                this.loading = false;
               });
             } catch (error) {
               console.log(error);
             }
           } else if (change.type === "removed") {
-            console.log(this.cities);
             this.cities = this.cities.filter((city) => {
               return city.id !== change.doc.id;
             });
@@ -127,6 +141,29 @@ export default {
   font-family: "Quicksand", sans-serif;
 }
 
+.loading {
+  @keyframes spin {
+    to {
+      transform: rotateZ(360deg);
+    }
+  }
+  display: flex;
+  height: 100%;
+  width: 100%;
+  justify-content: center;
+  align-items: center;
+  span {
+    display: block;
+    width: 60px;
+    height: 60px;
+    margin: 0 auto;
+    border: 2px solid transparent;
+    border-top-color: #142a5f;
+    border-radius: 50%;
+    animation: spin ease 1000ms infinite;
+  }
+}
+
 .day {
   transition: 500ms ease all;
   background-color: rgb(59, 150, 249);
@@ -143,8 +180,6 @@ export default {
 }
 
 .main {
-  // max-width: 1024px;
-  // margin: 0 auto;
   height: 100vh;
 }
 
