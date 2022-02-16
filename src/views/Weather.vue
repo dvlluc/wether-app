@@ -12,6 +12,7 @@
           :forecast="forecast"
         />
         <HourlyWeather :forecast="forecast" />
+        <WeeklyForecast :forecast="forecast" />
       </div>
     </div>
   </div>
@@ -24,10 +25,11 @@ import axios from "axios";
 
 import CurrentWeather from "../components/CurrentWeather.vue";
 import HourlyWeather from "../components/HourlyWeather.vue";
+import WeeklyForecast from "../components/WeeklyForecast.vue";
 
 export default {
   name: "Weather",
-  components: { CurrentWeather, HourlyWeather },
+  components: { CurrentWeather, HourlyWeather, WeeklyForecast },
   props: ["APIkey", "isDay", "isNight"],
   data() {
     return {
