@@ -15,15 +15,7 @@
         <router-link class="router-link" :to="{name:'AddCity'},">
           <i class="fas fa-plus"></i>
         </router-link>
-        <span>
-          <!-- {{
-            new Date().toLocaleString("en-GB", { timeZone: "America/New_York" })
-            new Date().toLocaleString("en-GB")
-          }} -->
-          {{
-            new Date().toLocaleString("en-GB")
-          }}
-        </span>
+        <span>more info</span>
         <span>&deg; C</span>
       </nav>
     </header>

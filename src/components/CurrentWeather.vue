@@ -10,13 +10,13 @@
           <div class="high">
             <i class="fas fa-chevron-up"></i>
             <span
-              >{{ Math.round(this.currentWeather.main.temp_max) }}&deg;</span
+              >{{ Math.round(this.currentWeather.main.temp_max) }}&deg;C</span
             >
           </div>
           <div class="low">
             <i class="fas fa-chevron-down"></i>
             <span
-              >{{ Math.round(this.currentWeather.main.temp_min) }}&deg;</span
+              >{{ Math.round(this.currentWeather.main.temp_min) }}&deg;C</span
             >
           </div>
         </div>
@@ -25,12 +25,19 @@
         }}</span>
         <span class="feels-like"
           >Feels like
-          {{ Math.round(this.currentWeather.main.feels_like) }}&deg;</span
+          {{ Math.round(this.currentWeather.main.feels_like) }}&deg;C</span
         >
       </div>
       <div class="weather-icon">
-        <img v-if="isDay" src="../../public/sun.png" alt="" />
-        <img v-if="isNight" src="../../public/moon.png" alt="" />
+        <span class="current-date">
+          {{
+            new Date().toLocaleString("en-GB", {
+              timeZone: this.forecast.timezone,
+            })
+          }}
+        </span>
+        <img v-if="isDay" src="../../public/sun.png" alt="sun" />
+        <img v-if="isNight" src="../../public/moon.png" alt="moon" />
       </div>
     </div>
   </div>
@@ -39,7 +46,7 @@
 <script>
 export default {
   name: "CurrentWeather",
-  props: ["currentWeather", "isDay", "isNight"],
+  props: ["currentWeather", "forecast", "isDay", "isNight"],
 };
 </script>
 
@@ -100,6 +107,10 @@ export default {
     img {
       width: 366px;
       height: 366px;
+    }
+    .current-date{
+      font-weight: 600;
+      margin-right: 10px;
     }
   }
 }

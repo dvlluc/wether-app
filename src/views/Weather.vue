@@ -5,7 +5,13 @@
     </div>
     <div v-else class="weather" :class="{ day: isDay, night: isNight }">
       <div class="weather-wrap">
-        <CurrentWeather :isDay="isDay" :isNight="isNight" :currentWeather="currentWeather"/>
+        <CurrentWeather
+          :isDay="isDay"
+          :isNight="isNight"
+          :currentWeather="currentWeather"
+          :forecast="forecast"
+        />
+        <HourlyWeather :forecast="forecast" />
       </div>
     </div>
   </div>
@@ -17,10 +23,11 @@ import { collection, query, getDocs, where } from "firebase/firestore";
 import axios from "axios";
 
 import CurrentWeather from "../components/CurrentWeather.vue";
+import HourlyWeather from "../components/HourlyWeather.vue";
 
 export default {
   name: "Weather",
-  components: { CurrentWeather },
+  components: { CurrentWeather, HourlyWeather },
   props: ["APIkey", "isDay", "isNight"],
   data() {
     return {
@@ -46,7 +53,6 @@ export default {
       );
       const querySnapshot = await getDocs(q);
       this.currentWeather = querySnapshot.docs[0].data().currentWeather;
-      console.log(this.currentWeather);
       axios
         .get(
           `https://api.openweathermap.org/data/2.5/onecall?lat=${this.currentWeather.coord.lat}&lon=${this.currentWeather.coord.lon}&exclude=current,minutley,alerts&units=metric&appid=${this.APIkey}`
