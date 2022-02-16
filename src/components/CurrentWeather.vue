@@ -28,7 +28,7 @@
           {{ Math.round(this.currentWeather.main.feels_like) }}&deg;C</span
         >
       </div>
-      <div class="weather-icon">
+      <div>
         <span class="current-date">
           {{
             new Date().toLocaleString("en-GB", {
@@ -36,6 +36,8 @@
             })
           }}
         </span>
+      </div>
+      <div class="weather-icon">
         <img v-if="isDay" src="../../public/sun.png" alt="sun" />
         <img v-if="isNight" src="../../public/moon.png" alt="moon" />
       </div>
@@ -107,11 +109,25 @@ export default {
     img {
       width: 366px;
       height: 366px;
+      animation-name: spin;
+      animation-duration: 4000ms;
+      animation-iteration-count: infinite;
+      animation-timing-function: linear;
+
+      @keyframes spin {
+        from {
+          transform: rotate(0deg);
+        }
+        to {
+          transform: rotate(360deg);
+        }
+      }
     }
-    .current-date{
-      font-weight: 600;
-      margin-right: 10px;
-    }
+  }
+
+  .current-date {
+    font-weight: 600;
+    margin-right: 80px;
   }
 }
 </style>

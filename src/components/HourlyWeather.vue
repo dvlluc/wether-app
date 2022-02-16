@@ -39,6 +39,7 @@ export default {
     display: flex;
     max-width: 100vw;
     overflow-x: scroll;
+    scrollbar-width: thin;
     padding: 0;
     margin: 0 20px;
     &::-webkit-scrollbar {
